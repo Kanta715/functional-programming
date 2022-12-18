@@ -1,0 +1,2 @@
+# functional-programming
+関数型プログラミングの理解を残すためのリポジトリ
