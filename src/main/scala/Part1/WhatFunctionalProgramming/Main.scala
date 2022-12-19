@@ -1,6 +1,6 @@
-package Part1
+package Part1.WhatFunctionalProgramming
 
-import Part1.{ StringBuilder => OriginalStringBuilder }
+import Part1.WhatFunctionalProgramming.{ StringBuilder => OriginalStringBuilder }
 
 object Main {
 
@@ -23,12 +23,12 @@ object Main {
     val original = OriginalStringBuilder()
 
     val step4 = original.append("[ ")
-    val step5 = original.append("OriginalStringBuilder")
-    val step6 = original.append(" ]")
+    val step5 = step4.append("OriginalStringBuilder")
+    val step6 = step5.append(" ]")
 
     // 参照透過性があるオブジェクト
-    println(step4) // StringBuilder([ )
-    println(step5) // StringBuilder(OriginalStringBuilder)
-    println(step6) // StringBuilder( ])
+    println(step4.toString) // [
+    println(step5.toString) // [OriginalStringBuilder
+    println(step6.toString) // [OriginalStringBuilder]
   }
 }

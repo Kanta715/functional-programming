@@ -1,5 +1,5 @@
 ## 1. 関数型プログラミングとは
-関数型プログラミングでは、純粋関数だけを使用してプログラムを子移築することを前提としている。
+関数型プログラミングでは、純粋関数だけを使用してプログラムを構築することを前提としている。
 
 ### 1-2. 純粋関数とは
 純粋関数とは、副作用のない関数のことを指す。
@@ -26,6 +26,8 @@ case class StringBuilder(string: String = "") {
   // Add string
   def append(str: String): StringBuilder =
     StringBuilder(string + str)
+
+  override def toString: String = string
 }
 
 // 副作用のあるオブジェクト
@@ -45,11 +47,11 @@ println(step3) // [ JavaStringBuilder ]
 val original = OriginalStringBuilder()
 
 val step4 = original.append("[ ")
-val step5 = original.append("OriginalStringBuilder")
-val step6 = original.append(" ]")
+val step5 = step4.append("OriginalStringBuilder")
+val step6 = step5.append(" ]")
 
 // 参照透過性があるオブジェクト
-println(step4) // StringBuilder([ )
-println(step5) // StringBuilder(OriginalStringBuilder)
-println(step6) // StringBuilder( ])
+println(step4.toString) // [
+println(step5.toString) // [ OriginalStringBuilder
+println(step6.toString) // [ OriginalStringBuilder ]
 ```
