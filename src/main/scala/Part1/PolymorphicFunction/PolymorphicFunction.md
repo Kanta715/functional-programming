@@ -1,5 +1,7 @@
-package Part1.WhatFunctionalProgramming
+## 多相関数：型の抽象化
+ここまで定義してきたのは関数は、**単相関数（monomorphic function）** である。単相関数とは、1つの型のデータだけを操作する関数のことをいう。
 
+```scala
 object PolymorphicFunction {
 
   def main(args: Array[String]): Unit = {
@@ -45,17 +47,6 @@ object PolymorphicFunction {
     println(find(tArray, tCheckForD)) // Some(T(D))
     println(find(tArray, tCheckForF)) // None
 
-    // ----------------------------------------------------
-
-    val ascSort: (Int, Int) => Boolean = (int, int2) => int < int2
-
-    val intArray2: Array[Int] = Array(
-      10, 3, 12, 20202, 222, 1
-    )
-
-    println(isSorted(intArray,  ascSort)) // true
-    println(isSorted(intArray2, ascSort)) // false
-
   }
 
   /**
@@ -84,19 +75,5 @@ object PolymorphicFunction {
     }
     loop(0)
   }
-
-  /**
-   * 練習問題
-   * 指定された比較関数に従って Array[A] がソートされているかどうか調べる isSorted を実装せよ
-   * わからんくてパクリ：https://github.com/cmeiklejohn/fpinscala/blob/master/IsSorted.scala
-   */
-  private def isSorted[A](array: Array[A], ordered: (A, A) => Boolean): Boolean = {
-    def loop(n: Int, acc: Boolean): Boolean = {
-      if ((n + 1) >= array.length)
-        acc
-      else
-        loop(n + 1, acc && ordered(array(n), array(n + 1)))
-    }
-    loop(0, true)
-  }
 }
+```

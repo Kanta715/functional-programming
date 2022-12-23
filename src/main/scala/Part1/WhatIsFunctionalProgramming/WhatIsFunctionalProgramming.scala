@@ -1,14 +1,15 @@
-package Part1.WhatFunctionalProgramming
+package Part1.WhatIsFunctionalProgramming
 
-import Part1.WhatFunctionalProgramming.{ StringBuilder => OriginalStringBuilder }
+import java.lang.{ StringBuilder => JavaStringBuilder }
+import Part1.WhatIsFunctionalProgramming.{ StringBuilder => OriginalStringBuilder }
 
-object PureFunction {
+object WhatIsFunctionalProgramming {
 
   def main(args: Array[String]): Unit = {
 
     // 副作用のあるオブジェクト
     // Java StringBuilder
-    val builder = new java.lang.StringBuilder
+    val builder = new JavaStringBuilder
 
     val step1 = builder.append("[ ")
     val step2 = builder.append("JavaStringBuilder")
@@ -28,7 +29,8 @@ object PureFunction {
 
     // 参照透過性があるオブジェクト
     println(step4.toString) // [
-    println(step5.toString) // [OriginalStringBuilder
-    println(step6.toString) // [OriginalStringBuilder]
+    println(step5.toString) // [ OriginalStringBuilder
+    println(step6.toString) // [ OriginalStringBuilder ]
   }
+
 }
