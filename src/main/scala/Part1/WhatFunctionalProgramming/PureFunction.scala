@@ -2,7 +2,7 @@ package Part1.WhatFunctionalProgramming
 
 import Part1.WhatFunctionalProgramming.{ StringBuilder => OriginalStringBuilder }
 
-object Main {
+object PureFunction {
 
   def main(args: Array[String]): Unit = {
 
