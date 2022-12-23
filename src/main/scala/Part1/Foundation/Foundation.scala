@@ -2,7 +2,7 @@ package Part1.Foundation
 
 import scala.collection.StringOps
 
-object Main {
+object Foundation {
 
   def main(args: Array[String]): Unit = {
     val funcName: String = args.headOption.getOrElse("fib")

@@ -1,4 +1,4 @@
-package Part1.WhatFunctionalProgramming
+package Part1.WhatIsFunctionalProgramming
 
 // 副作用のない StringBuilder を作成
 // Original StringBuilder
