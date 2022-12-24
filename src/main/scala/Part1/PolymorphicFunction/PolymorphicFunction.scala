@@ -77,7 +77,7 @@ object PolymorphicFunction {
    * 多相関数
    * A 型として抽象的に定義することで、汎用的に使える関数になる
    */
-  private def find[A](array: Array[A], f: A => Boolean): Option[A] = {
+  def find[A](array: Array[A], f: A => Boolean): Option[A] = {
     def loop(n: Int): Option[A] = {
       if (array.length <= n) None
       else if (f(array(n))) Some(array(n))
