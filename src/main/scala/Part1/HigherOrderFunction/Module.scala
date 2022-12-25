@@ -1,4 +1,4 @@
-package Part1.Foundation
+package Part1.HigherOrderFunction
 
 object Module {
 

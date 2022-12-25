@@ -1,8 +1,8 @@
-package Part1.Foundation
+package Part1.HigherOrderFunction
 
 import scala.collection.StringOps
 
-object Foundation {
+object HigherOrderFunction {
 
   def main(args: Array[String]): Unit = {
     val funcName: String = args.headOption.getOrElse("fib")
