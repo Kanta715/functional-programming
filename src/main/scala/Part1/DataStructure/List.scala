@@ -111,6 +111,30 @@ object List {
    * foldRight のみを使用して再起を中止することはできない
    */
 
+  /**
+   * 問7: foldRight を使ってリストの長さを求めよ
+   */
+  def length[A](list: List[A]): Int = {
+    val result = foldRight(list, 0)((_, i) => 1 + i)
+    result match {
+      case 0 => result
+      case _ => result - 1
+    }
+  }
+
+  /**
+   * foldRight は末尾再帰ではないため、リストが大きい場合 StackOverflowError になる
+   * スタックセーフな foldLeft を実装せよ
+   * https://qiita.com/pebblip/items/cf8d3230969b2f6b3132
+   * 末尾再帰にすることで、StackOverflowError が起こらない（末尾呼び出しが最適化されている場合）
+   */
+  def foldLeft[A, B](list: List[A], init: B)(f: (A, B) => B): B =
+    list match {
+      case Nil         => init
+      case VList(h, t) => foldLeft(t, f(h, init))(f)
+    }
+
+  //
   def map[A, B](list: List[A], f: A => B): List[B] = {
     var v: Seq[B] = Seq.empty[B]
 
