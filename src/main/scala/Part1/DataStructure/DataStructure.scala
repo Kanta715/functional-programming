@@ -34,6 +34,9 @@ object DataStructure {
     println(value8)
     val value9: List[Int] = List.dropWhile(vList3, (v: Int) => v == 80)
     println(value9)
+
+    val value10: Seq[Age] = List.foldRight(vList3, Seq.empty[Age])((x, y) => Age(x) +: y)
+    println(value10)
   }
 
   case class Age(v: Int)

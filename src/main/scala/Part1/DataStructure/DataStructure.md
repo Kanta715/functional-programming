@@ -22,5 +22,36 @@ object List {
   def apply[A](list: A*): List[A] =
     if (list.isEmpty) Nil else VList(list.head: A, apply[A](list.tail: _*))
 }
+```
 
+## リストの再帰と高階関数の一般化
+重複している部分を関数の引数として抽出すると、それらを一般化できる
+```scala
+  def sum(ints: List[Int]): Int =
+    ints match {
+      case Nil         => 0
+      case VList(h, t) => h + sum(t)
+    }
+
+  def product(ds: List[Double]): Double =
+    ds match {
+      case Nil         => 1.0
+      case VList(h, t) => h * product(t)
+    }
+
+  /**
+   * 上記のような sum, product があった場合、重複している部分を関数の引数として抽出すると、それらを一般化できる
+   */
+  def foldRight[A, B](list: List[A], init: B)(f: (A, B) => B): B = {
+    list match {
+      case Nil                           => init
+      case VList(head: A, tail: List[A]) => f(head, foldRight(tail, init)(f))
+    }
+  }
+
+  def sum2(ints: List[Int]): Int =
+    foldRight(ints, 0)(_ + _)
+
+  def product2(ds: List[Double]): Double =
+    foldRight(ds, 1.0)(_ * _)
 ```
