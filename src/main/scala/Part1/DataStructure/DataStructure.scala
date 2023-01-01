@@ -45,6 +45,58 @@ object DataStructure {
     // foldLeft
     val value12: Seq[Age] = List.foldLeft(vList2, Seq.empty[Age])((x, y) => y :+ Age(x))
     println(value12)
+
+    val value13: List[Int] = List.reverse(vList2)
+    println(value13)
+
+    val value14: String = List.foldRightOfBaseLeft(vList2, "")(_.toString + _) // 1210368
+    val value15: String = List.foldLeft(vList2, "")(_.toString + _)            // 3681021
+    println(value14)
+    println(value15)
+
+    val value16: List[Int] = List.append(vList3, 1234567890)
+    println(value16)
+
+    val l:  List[String] = VList("あ", VList("い", VList("う", VList("え", VList("お", Nil)))))
+    val l2: List[String] = VList("か", VList("き", VList("く", VList("け", VList("こ", Nil)))))
+    val value17: List[String] = List.connect(l, l2)
+    println(value17)
+
+    val numList: List[Int] = VList(2, VList(3, VList(9, Nil)))
+    val value18: List[Int] = List.addOne(numList)
+    println(value18)
+
+    val value19: List[Int] = List.flatMap(numList, (x: Int) => List.apply(x * 10))
+    println(value19)
+
+    val leaf:  Leaf[String] = Leaf("Leaf")
+    val leaf2: Leaf[String] = Leaf("Leaf2")
+    val leaf3: Leaf[String] = Leaf("Leaf3")
+    val leaf4: Leaf[String] = Leaf("Leaf4")
+
+    val branch:  Branch[String] = Branch(leaf,  leaf2)
+    val branch2: Branch[String] = Branch(leaf3, leaf4)
+
+    val root: Tree[String] = Branch(branch, branch2)
+
+    val value20: Int = Tree.size(root)
+    println(value20)
+
+    val intLeaf:  Leaf[Int] = Leaf(1)
+    val intLeaf2: Leaf[Int] = Leaf(2)
+    val intLeaf3: Leaf[Int] = Leaf(100)
+    val intLeaf4: Leaf[Int] = Leaf(20)
+
+    val intBranch: Branch[Int]  = Branch(intLeaf, intLeaf2)
+    val intBranch2: Branch[Int] = Branch(intLeaf3, intBranch)
+
+    val root2: Tree[Int] = Branch(intLeaf4, intBranch2)
+
+    val value21: Int = Tree.maximum(root2)
+    println(value21)
+
+    val value22: Int = Tree.depth(root2)
+    println(value22)
   }
 
   case class Age(v: Int)

@@ -92,7 +92,7 @@ object List {
   def foldRight[A, B](list: List[A], init: B)(f: (A, B) => B): B = {
     list match {
       case Nil                           => init
-      case VList(head: A, tail: List[A]) => f(head, foldRight(tail, init)(f))
+      case VList(head, tail) => f(head, foldRight(tail, init)(f))
     }
   }
 
@@ -134,13 +134,53 @@ object List {
       case VList(h, t) => foldLeft(t, f(h, init))(f)
     }
 
-  //
+  /**
+   * 順番を逆にして返す関数を実装せよ
+   */
+  def reverse[A](list: List[A]): List[A] = {
+    val seq = foldLeft(list, Seq.empty[A])((x, y) => x +: y)
+    List.apply(seq: _*)
+  }
+
+  /**
+   * foldLeft　をベースにした foldRight を作成せよ
+   * reverse のように逆順にすれば StackOverflowError を起こさずに済む
+   */
+  def foldRightOfBaseLeft[A, B](list: List[A], init: B)(f: (A, B) => B): B =
+    foldLeft(reverse(list), init)(f)
+
+  /**
+   * foldLeft または foldRight を使って append を実装せよ
+   */
+  def append[A](list: List[A], item: A): List[A] = {
+    val reverse = List.reverse(list)
+    val update  = List.foldLeft(reverse, Seq.empty[A])((x, y) => {
+      if (y.isEmpty) y ++ Seq(item,x) else y :+ x
+    })
+    List.reverse(apply(update:_*))
+  }
+
+  /**
+   * リストを連結する関数を実装せよ
+   */
+  def connect[A](lists: List[A]*): List[A] = {
+    var seq: Seq[A] = Seq.empty[A]
+    for {
+      list <- lists
+    } yield seq = seq ++ foldLeft(list, Seq.empty[A])((x, y) => y :+ x)
+    List.apply(seq:_*)
+  }
+
+  def addOne(list: List[Int]): List[Int] =
+    map(list, (x: Int) => x + 1)
+
+  // 総称関数 map を実装せよ
   def map[A, B](list: List[A], f: A => B): List[B] = {
     var v: Seq[B] = Seq.empty[B]
 
     def loop(list: List[A]): List[B] = {
       list match {
-        case VList(head: A, tail: List[A]) =>
+        case VList(head, tail) =>
           v = v :+ f(head)
           loop(tail)
         case Nil =>
@@ -150,11 +190,27 @@ object List {
     loop(list)
   }
 
+  /**
+   * リストを返す関数が渡され、1つのリストを返す flatMap を実装せよ
+   */
+  def flatMap[A, B](list: List[A], f: A => List[B]): List[B] = {
+    def loop(list: List[A], stock: Seq[B]): List[B] = {
+      list match {
+        case VList(h, t) =>
+          val value = f(h)
+          val seq   = foldLeft(value, stock)((x, y) => y :+ x)
+          loop(t, seq)
+        case Nil         => List.apply(stock:_*)
+      }
+    }
+    loop(list, Seq.empty[B])
+  }
+
   def filter[A](list: List[A], f: A => Boolean): List[A] = {
     var v = Seq.empty[A]
     def loop(list: List[A]): List[A] = {
       list match {
-        case VList(head: A, tail: List[A]) =>
+        case VList(head, tail) =>
           f(head) match {
             case true =>
               v = v :+ head
