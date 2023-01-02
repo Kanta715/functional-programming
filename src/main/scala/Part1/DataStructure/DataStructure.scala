@@ -1,5 +1,7 @@
 package Part1.DataStructure
 
+import scala.util.Random
+
 object DataStructure {
 
   def main(args: Array[String]): Unit = {
@@ -95,8 +97,18 @@ object DataStructure {
     val value21: Int = Tree.maximum(root2)
     println(value21)
 
-    val value22: Int = Tree.depth(root2)
+    val value22: Map[Int, Seq[Tree[Int]]] = Tree.depth(root2)
     println(value22)
+
+    val value23: Tree[String] = Tree.map(root2, (x: Int) => "Value " + x)
+    println(value23)
+
+    def func(tree: Tree[Int]): String = tree match {
+      case Leaf(v)      => v.toString + "__" + Random.nextInt(100) + "  "
+      case Branch(l, r) => func(l) + func(r)
+    }
+    val value24: String = Tree.fold(root2, func(_))
+    println(value24)
   }
 
   case class Age(v: Int)
