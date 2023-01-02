@@ -7,3 +7,4 @@
 - [多相関数](https://github.com/Kanta715/functional-programming/tree/main/src/main/scala/Part1/PolymorphicFunction)
 - [無名関数](https://github.com/Kanta715/functional-programming/tree/main/src/main/scala/Part1/PolymorphicFunction)
 - [型に従って実装する](https://github.com/Kanta715/functional-programming/tree/main/src/main/scala/Part1/TypeCompliantImplementation)
+- データ構造
