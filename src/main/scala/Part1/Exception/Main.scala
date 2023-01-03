@@ -26,5 +26,10 @@ object Main {
       case Some(v) => println(v)
       case None    => println("リストの値が見つかりません")
     }
+
+    Option.variance(seq) match {
+      case Some(v) => println(v)
+      case None    => println("リストが見つかりません")
+    }
   }
 }
