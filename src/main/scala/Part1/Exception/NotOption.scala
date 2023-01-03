@@ -1,6 +1,6 @@
 package Part1.Exception
 
-object Option {
+object NotOption {
 
   def mean(seq: Seq[Double]): Double =
     if  (seq.isEmpty) throw new ArithmeticException("空のリストです")
