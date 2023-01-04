@@ -31,5 +31,25 @@ object Main {
       case Some(v) => println(v)
       case None    => println("リストが見つかりません")
     }
+
+    val abs = Option.lift(math.abs)
+    val v   = Some(-100)
+    println(abs(v))
+
+    val listOpt: List[Option[String]] = List(
+      Some("A"),
+      Some("B"),
+      Some("AB"),
+      Some("O"),
+    )
+    val listOpt2: List[Option[String]] = List(
+      Some("A"),
+      None
+    )
+    println(Option.sequence(listOpt))
+    println(Option.sequence(listOpt2))
+
+    val toString: Option[String] => String = (opt: Option[String]) => opt.toString + "__@github.com"
+    println(Option.traverse(listOpt)(toString))
   }
 }
