@@ -124,3 +124,12 @@ Option.mean(empty) match {
   -  1 => Some(1)
   - -1 => None
 
+### Either データ型
+`Option` はエラーが起きたことはわかるが、具体的にどんなエラーが起きたのかはわからない。
+
+`Either` は `Left` の値でエラーの具体的な値を返す。成功の場合は `Right` として値を返す。
+```scala
+sealed abstract class Either[+E, +A]
+case class Left [E](v: E) extends Either[E,  Nothing]
+case class Right[A](v: A) extends Either[Nothing, A]
+```
