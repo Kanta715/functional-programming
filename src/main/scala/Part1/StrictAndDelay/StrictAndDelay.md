@@ -92,6 +92,8 @@ if3(true, println("TRUE!!!"), sys.error("FALSE!!!")) // TRUE!!!
 
 結果を1回だけ評価したい場合は、val 宣言時に `lazy` キーワードを追加する。`lazy val` 宣言の右辺の評価が最初に参照される時まで先送りされる。
 また、その後の参照で評価を繰り返し行うことがないよう、結果がキャッシュされる。Scala の非正格関数は引数を**値渡し**ではなく**名前渡し**で受け取る。
+
+[値渡しと名前渡しの違いをコードで見る](https://www.sassy-blog.com/entry/20171221/1513823305)
 ```scala
 def notCache(b: Boolean, i: => Int): Int = if (b) i + i else 0
 
@@ -114,3 +116,34 @@ cache(true, {
 // Cache !!!!!
 ```
 
+### 遅延リスト
+ここでは、遅延リスト（ストリーム）を使用する関数型プログラムの効率性とモジュール性を向上させるために、遅延性をどのように利用できるかについて見ていく。（ [モジュール性のメリット](https://learn.liferay.com/dxp/latest/ja/liferay-internals/architecture/the-benefits-of-modularity.html#id1) ）
+```scala
+trait Stream[+A] {
+  def headOption: Option[A] =
+    this match {
+      case Empty      => None
+      case Cons(h, _) => Some(h())
+    }
+}
+case object Empty extends Stream[Nothing]
+case class Cons[+A](h: () => A, t: () => Stream[A]) extends Stream[A]
+
+object Stream {
+
+  def cons[A](h: => A, t: => Stream[A]): Stream[A] = {
+    lazy val head = h
+    lazy val tail = t
+    Cons(() => head, () => tail)
+  }
+
+  def empty[A]: Stream[A] = Empty
+
+  def apply[A](as: A*): Stream[A] =
+    if   (as.isEmpty) empty
+    else cons(as.head, apply(as.tail: _*))
+}
+```
+
+#### ストリームを記憶し、再計算を回避する
+一般的には、Cons ノードの値が強制的に取得された時点で、それをキャッシュしておきたい。
