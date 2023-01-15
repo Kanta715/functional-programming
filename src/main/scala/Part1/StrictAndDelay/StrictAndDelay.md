@@ -146,4 +146,121 @@ object Stream {
 ```
 
 #### ストリームを記憶し、再計算を回避する
-一般的には、Cons ノードの値が強制的に取得された時点で、それをキャッシュしておきたい。
+一般的には、Cons ノードの値が強制的に取得された時点で、それをキャッシュしておきたい。以下の場合は、`double` が2回実行される。
+```scala
+val double: Int => Int = (x: Int) => {
+  println("execute")
+  x * 2
+}
+val cons = Cons(() => double(1), () => Part1.StrictAndDelay.Stream(10, 100, 1000))
+// 2回 double が呼ばれている
+val head  = cons.headOption
+val head2 = cons.headOption
+println(head)
+println(head2)
+// execute
+// execute
+// Some(2)
+// Some(2)
+```
+一般的には、スマートコンストラクタを定義することで、この問題を回避する。
+
+スマートコンストラクタとは、追加の不変条件を満たすデータ型、あるいはパターンマッチングに使用される「本物」のコンストラクタとはシグネチャが少しことなるデータ型を生成する関数のこと。
+
+ここでは、上記で定義した`cons` がスマートコンストラクタになる。
+
+`cons` スマートコンストラクタは、Cons の head, tail に対する名前渡しの引数を記憶する。サンクの処理が実行されるのは、サンクの強制的な評価が最初に行われた時だけになる。それ以降は、キャッシュされた遅延値（lazy val）が返される。
+
+```scala
+val s      = Part1.StrictAndDelay.Stream.cons(double(1), stream)
+val sHead  = s.headOption
+val sHead2 = s.headOption
+
+// double が1度しか実行されない
+println(sHead)
+println(sHead2)
+// execute
+// Some(2)
+// Some(2) <- キャッシュされた値
+```
+
+### プログラムの記述と評価の切り分け
+関数型プログラミングのテーマの1つは**関心の分離**である。 処理の記述をその実際の実行から切り離す必要がある。
+
+Stream では、一連の要素を生成するための処理を組み立てることが可能であり、そうした処理のステップはそれらの要素が必要になるまで実行されない。（名前渡しだから）
+それにより、一部だけを評価することが可能になる。
+
+以下の例では、Stream の exists 関数は遅延評価により、一部の値に対して関数が実行されている
+```scala
+def foldRight[B](init: B)(f: (A, => B) => B): B = {
+  this match {
+    case Empty      => init
+    case Cons(h, t) =>
+      f(h(), t().foldRight(init)(f))
+  }
+}
+
+def exists(f: A => Boolean): Boolean =
+  foldRight(false)((a, b) => f(a) || b)
+
+val result = stream.exists(v => {
+  println("exists")
+  v == 100
+})
+println(result)
+// exists
+// exists
+// true
+
+import Part1.DataStructure.List
+val f: Int => Boolean = (x: Int) => {
+  println("Execute")
+  x == 100
+}
+val result2 = List.exists(List.apply(10, 100, 1000), f)
+println(result2)
+// Execute
+// Execute
+// Execute
+// true
+```
+
+Stream で実装した map, filter などは答えを完全に生成しない。結果として得られた Stream の要素を他の処理が調べるまで、その Stream を実際に生成する処理は実行されない。
+
+この性質のおかげで、中間結果を完全にインスタンス化することなく関数を呼び出せる。
+
+Stream の map, filter は交互に実行されている。
+```scala
+// Stream
+val result9 = cons2.map(_ + 100).filter(_ != 200).toList
+println(result9)
+// map
+// filter
+// map
+// filter
+// map
+// filter
+// map
+// filter
+// map
+// filter
+// List(102, 120, 300, 2100, 20100)
+
+// List
+println()
+val listResult = List(1, 10, 100, 1000, 10000).mapS(_ + 100).filterS(_ != 100)
+println(listResult)
+// MapS
+// MapS
+// MapS
+// MapS
+// MapS
+// MapS
+// FilterS
+// FilterS
+// FilterS
+// FilterS
+// FilterS
+// FilterS
+// VList(101,VList(110,VList(200,VList(1100,VList(10100,Nil)))))
+```

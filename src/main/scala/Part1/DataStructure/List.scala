@@ -1,7 +1,35 @@
 package Part1.DataStructure
 
 // 共変にすることで Nothing や、Enum などを許容する
-sealed trait List[+A]
+sealed trait List[+A] {
+
+  // Stream の検証で使うやつ
+  def mapS[B](f: A => B): List[B] = {
+    def loop(list: List[A], stock: scala.List[B]): scala.List[B] = {
+      println("MapS")
+      list match {
+        case Nil               => stock
+        case VList(head, tail) =>
+          loop(tail, stock  :+ f(head))
+      }
+    }
+    List.apply(loop(this, scala.List.empty):_*)
+  }
+
+  def filterS(f: A => Boolean): List[A] = {
+    def loop(list: List[A], stock: scala.List[A]): scala.List[A] = {
+      println("FilterS")
+      list match {
+        case Nil               => stock
+        case VList(head, tail) =>
+          if (f(head)) loop(tail, stock :+ head)
+          else         loop(tail, stock)
+      }
+    }
+
+    List.apply(loop(this, scala.List.empty):_*)
+  }
+}
 
 final case object Nil extends List[Nothing]
 
@@ -91,9 +119,13 @@ object List {
    */
   def foldRight[A, B](list: List[A], init: B)(f: (A, B) => B): B = {
     list match {
-      case Nil                           => init
+      case Nil               => init
       case VList(head, tail) => f(head, foldRight(tail, init)(f))
     }
+  }
+
+  def exists[A](list: List[A], f: A => Boolean): Boolean = {
+    foldRight(list, false)((a, b) => f(a) || b)
   }
 
   def sum2(ints: List[Int]): Int =
