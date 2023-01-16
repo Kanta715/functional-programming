@@ -264,3 +264,32 @@ println(listResult)
 // FilterS
 // VList(101,VList(110,VList(200,VList(1100,VList(10100,Nil)))))
 ```
+
+### 無限ストリームと余再帰
+ここまでの関数は漸進的であるため、**無限ストリーム**にも対応する。
+```scala
+scala> import Part1.StrictAndDelay.Stream
+import Part1.StrictAndDelay.Stream
+
+scala> val ones: Stream[Int] = Stream.cons(1, ones)
+val ones: Part1.StrictAndDelay.Stream[Int] = Cons(Part1.StrictAndDelay.Stream$$$Lambda$4172/1283856354@79370164,Part1.StrictAndDelay.Stream$$$Lambda$4173/1057769576@2af9b564)
+
+scala> ones.take(5).toList
+val res0: List[Int] = List(1, 1, 1, 1, 1)
+
+scala> ones.map(_ + 1).exists(_ % 2 == 0)
+map
+val res1: Boolean = true
+```
+
+上記のケースではすぐに結果が返される。しかし、少し間違えるといつもでも終了しないスタックセーフではない式を書いてしまいやすい。
+明確な答えを持って終了するための要素が永遠に検出されないため、要素をさらに調べる作業が永遠に続く。
+```scala
+scala> ones.forAll(_ == 1)
+ ⋮
+java.lang.StackOverflowError
+  at sun.nio.cs.UTF_8$Encoder.encodeLoop(UTF_8.java:691)
+  at java.nio.charset.CharsetEncoder.encode(CharsetEncoder.java:579)
+  at sun.nio.cs.StreamEncoder.implWrite(StreamEncoder.java:271)
+  at sun.nio.cs.StreamEncoder.write(StreamEncoder.java:125)
+```

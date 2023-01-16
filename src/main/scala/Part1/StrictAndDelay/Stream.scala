@@ -128,6 +128,49 @@ object Stream {
     Cons(() => head, () => tail)
   }
 
+  // 指定された値の無限ストリームを返す constant 関数を実装せよ
+  def constant[A](c: => A): Stream[A] =
+    cons(c, this.constant(c))
+
+  // n で始まって、n + 1, n + 2 と続く整数の無限ストリームを生成する from 関数を実装せよ
+  def from(n: Int): Stream[Int] = {
+    object plus {
+      var i: Int = 1
+      def apply(n: Int): Int = {
+        val result = i + n
+        i = i + 1
+        result
+      }
+    }
+    cons(n, this.constant(plus(n)))
+  }
+
+  // フィボナッチ数列の無限ストリームを生成する fibs 関数を実装せよ
+  def fibs: Stream[Int] = {
+    object fib {
+      var before = 0
+      var current = 1
+      def apply: Int = {
+        val result = before + current
+
+        before = current
+        current = result
+
+        result
+      }
+    }
+    cons(0, this.constant(fib.apply))
+  }
+
+  // 汎用的なストリーム関数 unfold を実装せよ
+  // この関数は、初期状態に加えて、生成されるストリームの次の値を生成する関数を受け取る
+  def unfold[A, S](init: S)(f: S => Option[(A, S)]): Stream[A] =
+    f(init) match {
+      case None        => Empty
+      case Some(tuple) =>
+        cons(tuple._1, this.unfold(tuple._2)(f))
+    }
+
   def empty[A]: Stream[A] = Empty
 
   def apply[A](as: A*): Stream[A] =

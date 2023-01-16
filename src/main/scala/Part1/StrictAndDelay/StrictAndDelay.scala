@@ -189,5 +189,20 @@ object StrictAndDelay {
     // FilterS
     // FilterS
     // VList(101,VList(110,VList(200,VList(1100,VList(10100,Nil)))))
+
+    println()
+    // --------------------------------------------------------------
+
+    val infinite = Stream.constant(100)
+    println(infinite.take(10).toList)
+
+    val from = Stream.from(300)
+    println(from.take(5).toList)
+
+    val fibs = Stream.fibs
+    println(fibs.take(20).toList)
+
+    val unfold = Stream.unfold(1)(x => { if (x <= 100) Some(((println(x), x)._2 ,x + 1)) else None })
+    println(unfold.take(200).toList)
   }
 }
