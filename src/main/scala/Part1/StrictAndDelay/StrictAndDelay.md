@@ -293,3 +293,5 @@ java.lang.StackOverflowError
   at sun.nio.cs.StreamEncoder.implWrite(StreamEncoder.java:271)
   at sun.nio.cs.StreamEncoder.write(StreamEncoder.java:125)
 ```
+
+余再帰がわからん
