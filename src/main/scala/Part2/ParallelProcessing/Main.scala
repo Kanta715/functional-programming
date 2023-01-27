@@ -4,12 +4,12 @@ object Main {
 
   def main(args: Array[String]): Unit = {
 
-    val ints = 1 to 10000000
+    val ints = 1 to 10000
 
     val start = System.currentTimeMillis()
     val seq   = Sequential.sum(ints)
     val end   = System.currentTimeMillis()
-    println("/-- 逐次処理 -----------------------------")
+    println("/--------------------------------- 1")
     println(start - end + "ms")
     println(seq)
     println()
@@ -17,28 +17,38 @@ object Main {
     val start2 = System.currentTimeMillis()
     val par    = Parallel.sum(ints)
     val end2   = System.currentTimeMillis()
-    println("/-- 並列処理 -----------------------------")
+    println("/--------------------------------- 2")
     println(start2 - end2 + "ms")
     println(par)
     println()
 
-    // /-- 逐次処理 -----------------------------
-    // -96ms
-    // -2004260032
-    //
-    // /-- 並列処理 -----------------------------
-    // -282ms
-    // -2004260032
-
     val start3 = System.currentTimeMillis()
     val p      = Par.sum(ints)
     val end3   = System.currentTimeMillis()
-    println("/-- 並列処理 -----------------------------")
+    println("/--------------------------------- 3")
     println(start3 - end3 + "ms")
     println(p)
+    println()
 
-    // /-- 並列処理 -----------------------------
-    // -426ms
-    // -2004260032
+    val start4 = System.currentTimeMillis()
+    val p2     = Par.sum2(ints)
+    val end4   = System.currentTimeMillis()
+    println("/--------------------------------- 4")
+    println(start4 - end4 + "ms")
+    println(p2)
+
+    val start5 = System.currentTimeMillis()
+    Par.par(ints)
+    val end5   = System.currentTimeMillis()
+    println("/--------------------------------- 5")
+    println(start5 - end5 + "ms")
+    println()
+
+    println(Par.str == Par.str2) // どっちも逐次（書籍には、sum の実装で並列になるとか言ってる）
+    println(Par.str == Par.str3) // Future で実装したものは並列処理になっている
+
+    println(Par.str)
+    println(Par.str2)
+    println(Par.str3)
   }
 }
