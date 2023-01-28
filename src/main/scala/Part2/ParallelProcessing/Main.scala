@@ -4,7 +4,7 @@ object Main {
 
   def main(args: Array[String]): Unit = {
 
-    val ints = 1 to 10000
+    val ints = 1 to 10
 
     val start = System.currentTimeMillis()
     val seq   = Sequential.sum(ints)
@@ -23,19 +23,18 @@ object Main {
     println()
 
     val start3 = System.currentTimeMillis()
-    val p      = Par.sum(ints)
+    Par.sum(ints)
     val end3   = System.currentTimeMillis()
     println("/--------------------------------- 3")
     println(start3 - end3 + "ms")
-    println(p)
     println()
 
     val start4 = System.currentTimeMillis()
-    val p2     = Par.sum2(ints)
+    Par.sum2(ints)
     val end4   = System.currentTimeMillis()
     println("/--------------------------------- 4")
     println(start4 - end4 + "ms")
-    println(p2)
+    println()
 
     val start5 = System.currentTimeMillis()
     Par.par(ints)
@@ -46,9 +45,5 @@ object Main {
 
     println(Par.str == Par.str2) // どっちも逐次（書籍には、sum の実装で並列になるとか言ってる）
     println(Par.str == Par.str3) // Future で実装したものは並列処理になっている
-
-    println(Par.str)
-    println(Par.str2)
-    println(Par.str3)
   }
 }

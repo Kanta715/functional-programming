@@ -43,8 +43,4 @@ object Par {
     }))
     Await.result(v, scala.concurrent.duration.Duration.Inf)
   }
-
-  def parallel(ints: scala.collection.mutable.Seq[Int]): Unit = {
-    ???
-  }
 }
